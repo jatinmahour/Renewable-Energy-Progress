@@ -37,7 +37,7 @@ app.layout = dbc.Container([
             dbc.Col([
                 dbc.Button(
                     "Code",
-                    href="https://github.com/jatinmahour/US-urban-tree-analysis/blob/main/dashboard.py",
+                    href="https://github.com/jatinmahour/Renewable-Energy-Progress/blob/main/main.py",
                     # download="my_data.txt",
                     external_link=True,
                     target="_blank",
