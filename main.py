@@ -24,36 +24,38 @@ df16 = pd.read_csv("16 biofuel-production.csv")
 df17 = pd.read_csv("17 installed-geothermal-capacity.csv")
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP],
-                meta_tags=[{'name': 'viewport',
-                            'content': 'width=device-width, initial-scale=1.0'}])
+                )
 server = app.server
 
-app.layout = dbc.Container([
-    dbc.Row(
-        [
-            dbc.Col(html.H4("Global Renewable Energy Progress (1965-2022)", className="ml-2",
-                            style={"font-family": "Times New Roman", "font-weight": "bold", 'color': '#3a3733',
-                                   'marginTop': 20})),
-            dbc.Col([
-                dbc.Button(
-                    "Code",
-                    href="https://github.com/jatinmahour/Renewable-Energy-Progress/blob/main/main.py",
-                    # download="my_data.txt",
-                    external_link=True,
-                    target="_blank",
-                    color="dark",
-                    style={"font-family": "Times New Roman", 'margin-left': '770px', 'margin-top': '10px',
-                           "width": 60}
-                )
-            ]),
-        ], style={'background-color': '#08F075 '}
-    ),
+app.layout = html.Div([
+    html.Div([
+        dbc.Row(
+            [
+                dbc.Col(html.H6("Global Renewable Energy Progress (1965-2022)", className="ml-2",
+                                style={"font-family": "Times New Roman", "font-weight": "bold", 'color': '#3a3733',
+                                       'marginTop': 10, 'marginLeft': 20})),
+                dbc.Col([
+                    dbc.Button(
+                        "Code",
+                        href="https://github.com/jatinmahour/Renewable-Energy-Progress/blob/main/main.py",
+                        # download="my_data.txt",
+                        external_link=True,
+                        target="_blank",
+                        color="dark",
+                        style={"font-family": "Times New Roman", 'margin-left': '700px','marginTop': 5,'marginBottom': 5,
+                               "width": 60}
+                    )
+                ]),
+            ], style={'background-color': '#08F075 '}
+        )
+    ]),
     dbc.Row([
         dbc.Col([
             dbc.Row([
-                html.H5("Select Entity", className="ml-2",
-                        style={"font-family": "Times New Roman", "font-weight": "bold",'color': '#3a3733', 'marginTop': 20, 'padding': 5,
-                               'marginLeft': 10
+                html.H6("Select Entity", className="ml-2",
+                        style={"font-family": "Times New Roman", "font-weight": "bold", 'color': '#3a3733',
+                               'marginTop': 20, 'padding': 5,
+                               'marginLeft': 20
                                }),
                 dcc.Dropdown(id='select_entity', options=[
                     {'label': x, 'value': x} for x in sorted(df.Entity.unique())
@@ -68,13 +70,14 @@ app.layout = dbc.Container([
                              placeholder='Please select...',
                              # gray, default text shown when no option is selected
                              clearable=True,  # allow user to removes the selected value
-                             style={'width': "100%"}
+                             style={'width': "100%", 'marginLeft': 10}
                              )
             ]),
             dbc.Row([
-                html.H5('Choose Analytics',
-                        style={"font-family": "Times New Roman","font-weight": "bold", 'color': '#3a3733', 'marginTop': 20, 'padding': 5,
-                               'marginLeft': 10
+                html.H6('Choose Analytics',
+                        style={"font-family": "Times New Roman", "font-weight": "bold", 'color': '#3a3733',
+                               'marginTop': 20, 'padding': 5,
+                               'marginLeft': 20
                                }),
                 dcc.Dropdown(id='options', options=[
                     {'label': 'Renewables (% equivalent primary energy)',
@@ -118,50 +121,54 @@ app.layout = dbc.Container([
                              placeholder='Please select...',
                              # gray, default text shown when no option is selected
                              clearable=True,  # allow user to removes the selected value
-                             style={'width': "100%"}
+                             style={'width': "100%", 'marginLeft': 10}
                              )
             ])
         ], md=4),
         dbc.Col([
             html.Div([
                 dbc.Row(
-                    html.H3(
+                    html.H5(
                         "Renewable energy sources are growing quickly and will play a vital role in tackling climate change.",
                         className="ml-2",
                         style={"font-family": "Times New Roman", 'color': '#C51B1B', "font-weight": "bold",
-                               'padding': 10,
                                'font-style': ' oblique',
-                               'marginLeft': 30,
+                               'marginLeft': 60,
                                'marginTop': 20})
                 ),
                 dbc.Row(
-                    html.H5(
+                    html.H6(
                         "Renewable energy will play a key role in decarbonizing our energy systems in the coming decades."
                         " But how rapidly is our production of renewable energy changing? What technologies look most promising"
                         " in transforming our energy mix? "
                         "In this dashboard we look at the data on renewable energy technologies across the world, "
                         "the combination of hydropower, solar, wind, geothermal, and modern biofuels; what share of energy "
-                        "they account for today, and how quickly this is changing.", className="mb-4",
+                        "they account for today, and how quickly this is changing.", className="ml-2",
                         style={"font-family": "Times New Roman", 'color': '#3a3733', "font-weight": "bold",
-                               'marginLeft': 30})),
-                html.H5(
+                               'marginLeft': 60})),
+                html.H6(
                     "We have selected the top five global economies and compared their renewable energy"
                     " generation and consumption over the years. There are many entities to choose from including "
-                    "high-income countries, upper middle-income countries, lower middle-income countries, OECD(BP) etc..", className="mb-4",
+                    "high-income countries, upper middle-income countries, lower middle-income countries, OECD(BP) etc..",
+                    className="ml-2",
                     style={"font-family": "Times New Roman", 'color': '#3a3733',
                            "font-weight": "bold",
-                           'marginLeft': 30})
+                           'marginLeft': 60})
 
             ])
-        ], md=8)
+        ], md=7)
+
     ]),
     html.Hr(),
+    html.Div([
+        dbc.Row([dcc.Graph(id="chart", figure={})]),
+        dbc.Row(
+            html.H6("Dashboard: By Jatin Mahaur", style={"font-family": "Times New Roman", 'color': '#3a3733',
 
-    dbc.Row(html.Div([dcc.Graph(id="chart", figure={})])),
-    dbc.Row(
-        html.H6("Dashboard: By Jatin Mahaur")
-    )
-], fluid=True)
+                                                         'marginLeft': 10})
+        )
+    ])
+])
 
 
 @app.callback(
@@ -178,17 +185,17 @@ def update_output(value_chosen, option_chosen):
         else:
             dff = df[df["Entity"] == value_chosen]
         fig = px.line(dff, x="Year", y="Renewables (% equivalent primary energy)",
-                      color='Entity', markers=True,color_discrete_sequence=px.colors.qualitative.G10,
-                      width=1800, height=600)
+                      color='Entity', markers=True, color_discrete_sequence=px.colors.qualitative.G10,
+                      width=1300, height=500)
         fig.update_layout(
             title='Share of primary energy consumption from renewable sources',
-            title_font=dict(size=30,
+            title_font=dict(size=20,
                             color='#3a3733',
                             family='Times New Roman'),
-            title_x=0.055,  # Title aligned with grid
-            title_y=0.88,  # Title positioned near the top vertically
+            title_x=0.072,  # Title aligned with grid
+            title_y=0.84,  # Title positioned near the top vertically
             plot_bgcolor='#F5F7FA',
-            yaxis_ticksuffix = "%"
+            yaxis_ticksuffix="%"
         )
         fig.update_xaxes(
             mirror=True,
@@ -204,7 +211,7 @@ def update_output(value_chosen, option_chosen):
             linecolor='black',
             gridcolor='lightgrey'
         )
-        fig.add_annotation(dict(font=dict(color='#3a3733', size=20, family='Times New Roman'),
+        fig.add_annotation(dict(font=dict(color='#3a3733', size=14, family='Times New Roman'),
                                 x=0.01,
                                 y=0.89,
                                 showarrow=False,
@@ -226,16 +233,16 @@ def update_output(value_chosen, option_chosen):
             dff = df4[df4["Entity"] == value_chosen]
         fig = px.line(dff, x="Year", y=['Renewables (% electricity)'], color='Entity', markers=True,
                       color_discrete_sequence=px.colors.qualitative.G10,
-                      width=1800, height=600)
+                      width=1300, height=500)
         fig.update_layout(
             title='Share of electricity production from renewable sources',
-            title_font=dict(size=30,
+            title_font=dict(size=20,
                             color='#3a3733',
                             family='Times New Roman'),
-            title_x=0.055,  # Title aligned with grid
-            title_y=0.88,  # Title positioned near the top vertically
+            title_x=0.072,  # Title aligned with grid
+            title_y=0.84,  # Title positioned near the top vertically
             plot_bgcolor='#F5F7FA',
-            yaxis_ticksuffix = "%"
+            yaxis_ticksuffix="%"
         )
         fig.update_xaxes(
             mirror=True,
@@ -251,7 +258,7 @@ def update_output(value_chosen, option_chosen):
             linecolor='black',
             gridcolor='lightgrey'
         )
-        fig.add_annotation(dict(font=dict(color='#3a3733', size=20, family='Times New Roman'),
+        fig.add_annotation(dict(font=dict(color='#3a3733', size=14, family='Times New Roman'),
                                 x=0.01,
                                 y=0.89,
                                 showarrow=False,
@@ -273,16 +280,16 @@ def update_output(value_chosen, option_chosen):
             dff = df5[df5["Entity"] == value_chosen]
         fig = px.line(dff, x="Year", y=['Electricity from hydro (TWh)'], color='Entity', markers=True,
                       color_discrete_sequence=px.colors.qualitative.G10,
-                      width=1800, height=600)
+                      width=1300, height=500)
         fig.update_layout(
             title='Hydropower generation',
-            title_font=dict(size=30,
+            title_font=dict(size=20,
                             color='#3a3733',
                             family='Times New Roman'),
-            title_x=0.073,  # Title aligned with grid
-            title_y=0.88,  # Title positioned near the top vertically
+            title_x=0.10,  # Title aligned with grid
+            title_y=0.84,  # Title positioned near the top vertically
             plot_bgcolor='#F5F7FA',
-            yaxis_ticksuffix = " (TWh)"
+            yaxis_ticksuffix=" (TWh)"
         )
         fig.update_xaxes(
             mirror=True,
@@ -298,7 +305,7 @@ def update_output(value_chosen, option_chosen):
             linecolor='black',
             gridcolor='lightgrey'
         )
-        fig.add_annotation(dict(font=dict(color='#3a3733', size=20, family='Times New Roman'),
+        fig.add_annotation(dict(font=dict(color='#3a3733', size=14, family='Times New Roman'),
                                 x=0.01,
                                 y=0.89,
                                 showarrow=False,
@@ -317,14 +324,14 @@ def update_output(value_chosen, option_chosen):
             dff = df6[df6["Entity"] == value_chosen]
         fig = px.line(dff, x="Year", y=['Hydro (% equivalent primary energy)'], color='Entity', markers=True,
                       color_discrete_sequence=px.colors.qualitative.G10,
-                      width=1800, height=600)
+                      width=1300, height=500)
         fig.update_layout(
             title='Share of primary energy consumption from hydroelectric power',
-            title_font=dict(size=30,
+            title_font=dict(size=20,
                             color='#3a3733',
                             family='Times New Roman'),
-            title_x=0.80,  # Title aligned with grid
-            title_y=0.88,  # Title positioned near the top vertically
+            title_x=0.765,  # Title aligned with grid
+            title_y=0.84,  # Title positioned near the top vertically
             plot_bgcolor='#F5F7FA',
             yaxis_ticksuffix="%"
 
@@ -343,7 +350,7 @@ def update_output(value_chosen, option_chosen):
             linecolor='black',
             gridcolor='lightgrey'
         )
-        fig.add_annotation(dict(font=dict(color='#3a3733', size=20, family='Times New Roman'),
+        fig.add_annotation(dict(font=dict(color='#3a3733', size=14, family='Times New Roman'),
                                 x=0.38,
                                 y=0.89,
                                 showarrow=False,
@@ -362,14 +369,14 @@ def update_output(value_chosen, option_chosen):
             dff = df7[df7["Entity"] == value_chosen]
         fig = px.line(dff, x="Year", y=['Hydro (% electricity)'], color='Entity', markers=True,
                       color_discrete_sequence=px.colors.qualitative.G10,
-                      width=1800, height=600)
+                      width=1300, height=500)
         fig.update_layout(
             title='Share of electricity production from hydropower',
-            title_font=dict(size=30,
+            title_font=dict(size=20,
                             color='#3a3733',
                             family='Times New Roman'),
             title_x=0.15,  # Title aligned with grid
-            title_y=0.88,  # Title positioned near the top vertically
+            title_y=0.85,  # Title positioned near the top vertically
             plot_bgcolor='#F5F7FA',
             yaxis_ticksuffix="%"
         )
@@ -387,9 +394,9 @@ def update_output(value_chosen, option_chosen):
             linecolor='black',
             gridcolor='lightgrey'
         )
-        fig.add_annotation(dict(font=dict(color='#3a3733', size=20, family='Times New Roman'),
-                                x=0.12,
-                                y=0.89,
+        fig.add_annotation(dict(font=dict(color='#3a3733', size=14, family='Times New Roman'),
+                                x=0.105,
+                                y=0.90,
                                 showarrow=False,
                                 text="Measured as a percentage of total electricity.",
                                 textangle=0,
@@ -406,14 +413,14 @@ def update_output(value_chosen, option_chosen):
             dff = df8[df8["Entity"] == value_chosen]
         fig = px.line(dff, x="Year", y=['Electricity from wind (TWh)'], color='Entity', markers=True,
                       color_discrete_sequence=px.colors.qualitative.G10,
-                      width=1800, height=600)
+                      width=1300, height=500)
         fig.update_layout(
             title='Wind power generation',
-            title_font=dict(size=30,
+            title_font=dict(size=20,
                             color='#3a3733',
                             family='Times New Roman'),
-            title_x=0.07,  # Title aligned with grid
-            title_y=0.88,  # Title positioned near the top vertically
+            title_x=0.095,  # Title aligned with grid
+            title_y=0.85,  # Title positioned near the top vertically
             plot_bgcolor='#F5F7FA',
             yaxis_ticksuffix=" (TWh)"
 
@@ -432,9 +439,9 @@ def update_output(value_chosen, option_chosen):
             linecolor='black',
             gridcolor='lightgrey'
         )
-        fig.add_annotation(dict(font=dict(color='#3a3733', size=20, family='Times New Roman'),
+        fig.add_annotation(dict(font=dict(color='#3a3733', size=14, family='Times New Roman'),
                                 x=0.01,
-                                y=0.89,
+                                y=0.90,
                                 showarrow=False,
                                 text="Annual electricity generation from wind is measured in terawatt-hours (TWh) per year."
                                      " This includes both onshore and offshore wind sources.",
@@ -452,14 +459,14 @@ def update_output(value_chosen, option_chosen):
             dff = df9[df9["Entity"] == value_chosen]
         fig = px.line(dff, x="Year", y=['Wind Capacity'], color='Entity', markers=True,
                       color_discrete_sequence=px.colors.qualitative.G10,
-                      width=1800, height=600)
+                      width=1300, height=500)
         fig.update_layout(
             title='Installed wind energy capacity',
-            title_font=dict(size=30,
+            title_font=dict(size=20,
                             color='#3a3733',
                             family='Times New Roman'),
-            title_x=0.07,  # Title aligned with grid
-            title_y=0.88,  # Title positioned near the top vertically
+            title_x=0.090,  # Title aligned with grid
+            title_y=0.84,  # Title positioned near the top vertically
             plot_bgcolor='#F5F7FA',
             yaxis_ticksuffix=" (GW)"
         )
@@ -477,7 +484,7 @@ def update_output(value_chosen, option_chosen):
             linecolor='black',
             gridcolor='lightgrey'
         )
-        fig.add_annotation(dict(font=dict(color='#3a3733', size=20, family='Times New Roman'),
+        fig.add_annotation(dict(font=dict(color='#3a3733', size=14, family='Times New Roman'),
                                 x=0.01,
                                 y=0.89,
                                 showarrow=False,
@@ -497,14 +504,14 @@ def update_output(value_chosen, option_chosen):
             dff = df10[df10["Entity"] == value_chosen]
         fig = px.line(dff, x="Year", y=['Wind (% equivalent primary energy)'], color='Entity', markers=True,
                       color_discrete_sequence=px.colors.qualitative.G10,
-                      width=1800, height=600)
+                      width=1300, height=500)
         fig.update_layout(
             title='Share of primary energy consumption from wind',
-            title_font=dict(size=30,
+            title_font=dict(size=20,
                             color='#3a3733',
                             family='Times New Roman'),
-            title_x=0.055,  # Title aligned with grid
-            title_y=0.88,  # Title positioned near the top vertically
+            title_x=0.072,  # Title aligned with grid
+            title_y=0.84,  # Title positioned near the top vertically
             plot_bgcolor='#F5F7FA',
             yaxis_ticksuffix="%"
         )
@@ -522,7 +529,7 @@ def update_output(value_chosen, option_chosen):
             linecolor='black',
             gridcolor='lightgrey'
         )
-        fig.add_annotation(dict(font=dict(color='#3a3733', size=20, family='Times New Roman'),
+        fig.add_annotation(dict(font=dict(color='#3a3733', size=14, family='Times New Roman'),
                                 x=0.01,
                                 y=0.89,
                                 showarrow=False,
@@ -541,14 +548,14 @@ def update_output(value_chosen, option_chosen):
             dff = df11[df11["Entity"] == value_chosen]
         fig = px.line(dff, x="Year", y=['Wind (% electricity)'], color='Entity', markers=True,
                       color_discrete_sequence=px.colors.qualitative.G10,
-                      width=1800, height=600)
+                      width=1300, height=500)
         fig.update_layout(
             title='Share of electricity production from wind',
-            title_font=dict(size=30,
+            title_font=dict(size=20,
                             color='#3a3733',
                             family='Times New Roman'),
-            title_x=0.055,  # Title aligned with grid
-            title_y=0.88,  # Title positioned near the top vertically
+            title_x=0.073,  # Title aligned with grid
+            title_y=0.84,  # Title positioned near the top vertically
             plot_bgcolor='#F5F7FA',
             yaxis_ticksuffix="%"
         )
@@ -566,7 +573,7 @@ def update_output(value_chosen, option_chosen):
             linecolor='black',
             gridcolor='lightgrey'
         )
-        fig.add_annotation(dict(font=dict(color='#3a3733', size=20, family='Times New Roman'),
+        fig.add_annotation(dict(font=dict(color='#3a3733', size=14, family='Times New Roman'),
                                 x=0.01,
                                 y=0.89,
                                 showarrow=False,
@@ -585,14 +592,14 @@ def update_output(value_chosen, option_chosen):
             dff = df12[df12["Entity"] == value_chosen]
         fig = px.line(dff, x="Year", y=['Electricity from solar (TWh)'], color='Entity', markers=True,
                       color_discrete_sequence=px.colors.qualitative.G10,
-                      width=1800, height=600)
+                      width=1300, height=500)
         fig.update_layout(
             title='Solar power generation',
-            title_font=dict(size=30,
+            title_font=dict(size=20,
                             color='#3a3733',
                             family='Times New Roman'),
-            title_x=0.07,  # Title aligned with grid
-            title_y=0.88,  # Title positioned near the top vertically
+            title_x=0.094,  # Title aligned with grid
+            title_y=0.84,  # Title positioned near the top vertically
             plot_bgcolor='#F5F7FA',
             yaxis_ticksuffix=" (TWh)"
         )
@@ -610,7 +617,7 @@ def update_output(value_chosen, option_chosen):
             linecolor='black',
             gridcolor='lightgrey'
         )
-        fig.add_annotation(dict(font=dict(color='#3a3733', size=20, family='Times New Roman'),
+        fig.add_annotation(dict(font=dict(color='#3a3733', size=14, family='Times New Roman'),
                                 x=0.01,
                                 y=0.89,
                                 showarrow=False,
@@ -629,14 +636,14 @@ def update_output(value_chosen, option_chosen):
             dff = df13[df13["Entity"] == value_chosen]
         fig = px.line(dff, x="Year", y=['Solar Capacity'], color='Entity', markers=True,
                       color_discrete_sequence=px.colors.qualitative.G10,
-                      width=1800, height=600, )
+                      width=1300, height=500, )
         fig.update_layout(
             title='Installed solar energy capacity',
-            title_font=dict(size=30,
+            title_font=dict(size=20,
                             color='#3a3733',
                             family='Times New Roman'),
-            title_x=0.07,  # Title aligned with grid
-            title_y=0.88,  # Title positioned near the top vertically
+            title_x=0.09,  # Title aligned with grid
+            title_y=0.84,  # Title positioned near the top vertically
             plot_bgcolor='#F5F7FA',
             yaxis_ticksuffix=" (GW)"
         )
@@ -654,7 +661,7 @@ def update_output(value_chosen, option_chosen):
             linecolor='black',
             gridcolor='lightgrey'
         )
-        fig.add_annotation(dict(font=dict(color='#3a3733', size=20, family='Times New Roman'),
+        fig.add_annotation(dict(font=dict(color='#3a3733', size=14, family='Times New Roman'),
                                 x=0.01,
                                 y=0.89,
                                 showarrow=False,
@@ -673,14 +680,14 @@ def update_output(value_chosen, option_chosen):
             dff = df14[df14["Entity"] == value_chosen]
         fig = px.line(dff, x="Year", y=['Solar (% equivalent primary energy)'], color='Entity', markers=True,
                       color_discrete_sequence=px.colors.qualitative.G10,
-                      width=1800, height=600)
+                      width=1300, height=500)
         fig.update_layout(
             title='Share of primary energy consumption from solar',
-            title_font=dict(size=30,
+            title_font=dict(size=20,
                             color='#3a3733',
                             family='Times New Roman'),
-            title_x=0.055,  # Title aligned with grid
-            title_y=0.88,  # Title positioned near the top vertically
+            title_x=0.072,  # Title aligned with grid
+            title_y=0.84,  # Title positioned near the top vertically
             plot_bgcolor='#F5F7FA',
             yaxis_ticksuffix="%"
         )
@@ -698,7 +705,7 @@ def update_output(value_chosen, option_chosen):
             linecolor='black',
             gridcolor='lightgrey'
         )
-        fig.add_annotation(dict(font=dict(color='#3a3733', size=20, family='Times New Roman'),
+        fig.add_annotation(dict(font=dict(color='#3a3733', size=14, family='Times New Roman'),
                                 x=0.01,
                                 y=0.89,
                                 showarrow=False,
@@ -717,14 +724,14 @@ def update_output(value_chosen, option_chosen):
             dff = df15[df15["Entity"] == value_chosen]
         fig = px.line(dff, x="Year", y=['Solar (% electricity)'], color='Entity', markers=True,
                       color_discrete_sequence=px.colors.qualitative.G10,
-                      width=1800, height=600)
+                      width=1300, height=500)
         fig.update_layout(
             title='Share of electricity production from solar',
-            title_font=dict(size=30,
+            title_font=dict(size=20,
                             color='#3a3733',
                             family='Times New Roman'),
-            title_x=0.055,  # Title aligned with grid
-            title_y=0.88,  # Title positioned near the top vertically
+            title_x=0.072,  # Title aligned with grid
+            title_y=0.84,  # Title positioned near the top vertically
             plot_bgcolor='#F5F7FA',
             yaxis_ticksuffix="%"
         )
@@ -742,7 +749,7 @@ def update_output(value_chosen, option_chosen):
             linecolor='black',
             gridcolor='lightgrey'
         )
-        fig.add_annotation(dict(font=dict(color='#3a3733', size=20, family='Times New Roman'),
+        fig.add_annotation(dict(font=dict(color='#3a3733', size=14, family='Times New Roman'),
                                 x=0.01,
                                 y=0.89,
                                 showarrow=False,
@@ -761,16 +768,16 @@ def update_output(value_chosen, option_chosen):
             dff = df16[df16["Entity"] == value_chosen]
         fig = px.line(dff, x="Year", y=['Biofuels Production - TWh - Total'], color='Entity', markers=True,
                       color_discrete_sequence=px.colors.qualitative.G10,
-                      width=1800, height=600)
+                      width=1300, height=500)
         fig.update_layout(
             title='Biofuel energy production',
-            title_font=dict(size=30,
+            title_font=dict(size=20,
                             color='#3a3733',
                             family='Times New Roman'),
-            title_x=0.07,  # Title aligned with grid
-            title_y=0.88,  # Title positioned near the top vertically
+            title_x=0.094,  # Title aligned with grid
+            title_y=0.84,  # Title positioned near the top vertically
             plot_bgcolor='#F5F7FA',
-            yaxis_ticksuffix = " (TWh)"
+            yaxis_ticksuffix=" (TWh)"
         )
         fig.update_xaxes(
             mirror=True,
@@ -786,7 +793,7 @@ def update_output(value_chosen, option_chosen):
             linecolor='black',
             gridcolor='lightgrey'
         )
-        fig.add_annotation(dict(font=dict(color='#3a3733', size=20, family='Times New Roman'),
+        fig.add_annotation(dict(font=dict(color='#3a3733', size=14, family='Times New Roman'),
                                 x=0.01,
                                 y=0.89,
                                 showarrow=False,
@@ -806,14 +813,14 @@ def update_output(value_chosen, option_chosen):
             dff = df17[df17["Entity"] == value_chosen]
         fig = px.line(dff, x="Year", y=['Geothermal Capacity'], color='Entity', markers=True,
                       color_discrete_sequence=px.colors.qualitative.G10,
-                      width=1800, height=600)
+                      width=1300, height=500)
         fig.update_layout(
             title='Installed geothermal energy capacity',
-            title_font=dict(size=30,
+            title_font=dict(size=20,
                             color='#3a3733',
                             family='Times New Roman'),
-            title_x=0.51,  # Title aligned with grid
-            title_y=0.88,  # Title positioned near the top vertically
+            title_x=0.502,  # Title aligned with grid
+            title_y=0.84,  # Title positioned near the top vertically
             plot_bgcolor='#F5F7FA',
             yaxis_ticksuffix=" (MW)"
         )
@@ -831,7 +838,7 @@ def update_output(value_chosen, option_chosen):
             linecolor='black',
             gridcolor='lightgrey'
         )
-        fig.add_annotation(dict(font=dict(color='#3a3733', size=20, family='Times New Roman'),
+        fig.add_annotation(dict(font=dict(color='#3a3733', size=14, family='Times New Roman'),
                                 x=0.38,
                                 y=0.89,
                                 showarrow=False,
